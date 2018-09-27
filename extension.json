@@ -8,6 +8,11 @@
 	"AutoloadClasses": {
 		"DiscordNotifications": "DiscordNotificationsCore.php"
 	},
+	"MessagesDirs": {
+		"DiscordNotifications": [
+			"i18n"
+		]
+	},
 	"Hooks": {
 		"PageContentSaveComplete": [
 			[

@@ -27,10 +27,10 @@ class DiscordNotifications
 			return sprintf(
 				"%s (%s | %s | %s | %s)",
 				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserPage.$user)."|$user>",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingBlockUser.$user)."|" . wfMessage( 'discordnotifications-block' ) . ">",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserRights.$user)."|" . wfMessage( 'discordnotifications-groups' ) . ">",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserTalkPage.$user)."|" . wfMessage( 'discordnotifications-talk' ) . ">",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserContributions.$user)."|" . wfMessage( 'discordnotifications-contribs' ) . ">");
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingBlockUser.$user)."|" . self::getMessage('discordnotifications-block') . ">",
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserRights.$user)."|" . self::getMessage('discordnotifications-groups') . ">",
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserTalkPage.$user)."|" . self::getMessage('discordnotifications-talk') . ">",
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingUserContributions.$user)."|" . self::getMessage('discordnotifications-contribs') . ">");
 		}
 		else
 		{
@@ -54,15 +54,15 @@ class DiscordNotifications
 			$out = sprintf(
 				"%s (%s | %s | %s",
 				self::parseurl($prefix)."|".$article->getTitle()->getFullText().">",
-				self::parseurl($prefix."&".$wgWikiUrlEndingEditArticle)."|" . wfMessage( 'discordnotifications-edit' ) . ">",
-				self::parseurl($prefix."&".$wgWikiUrlEndingDeleteArticle)."|" . wfMessage( 'discordnotifications-delete' ) . ">",
-				self::parseurl($prefix."&".$wgWikiUrlEndingHistory)."|" . wfMessage( 'discordnotifications-history' ) . ">"/*,
+				self::parseurl($prefix."&".$wgWikiUrlEndingEditArticle)."|" . self::getMessage('discordnotifications-edit') . ">",
+				self::parseurl($prefix."&".$wgWikiUrlEndingDeleteArticle)."|" . self::getMessage('discordnotifications-delete') . ">",
+				self::parseurl($prefix."&".$wgWikiUrlEndingHistory)."|" . self::getMessage('discordnotifications-history') . ">"/*,
 					"move",
 					"protect",
 					"watch"*/);
 			if ($diff)
 			{
-				$out .= " | ".self::parseurl($prefix."&".$wgWikiUrlEndingDiff.$article->getRevision()->getID())."|" . wfMessage( 'discordnotifications-diff' ) . ">)";
+				$out .= " | ".self::parseurl($prefix."&".$wgWikiUrlEndingDiff.$article->getRevision()->getID())."|" . self::getMessage('discordnotifications-diff' ) . ">)";
 			}
 			else
 			{
@@ -92,9 +92,9 @@ class DiscordNotifications
 			return sprintf(
 				"%s (%s | %s | %s)",
 				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName)."|".$titleName.">",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName."&".$wgWikiUrlEndingEditArticle)."|" . wfMessage( 'discordnotifications-edit' ) . ">",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName."&".$wgWikiUrlEndingDeleteArticle)."|" . wfMessage( 'discordnotifications-delete' ) . ">",
-				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName."&".$wgWikiUrlEndingHistory)."|" . wfMessage( 'discordnotifications-history' ) . ">"/*,
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName."&".$wgWikiUrlEndingEditArticle)."|" . self::getMessage('discordnotifications-edit' ) . ">",
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName."&".$wgWikiUrlEndingDeleteArticle)."|" . self::getMessage('discordnotifications-delete' ) . ">",
+				"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$titleName."&".$wgWikiUrlEndingHistory)."|" . self::getMessage('discordnotifications-history' ) . ">"/*,
 						"move",
 						"protect",
 						"watch"*/);
@@ -139,15 +139,15 @@ class DiscordNotifications
 		}
 
 		$message = sprintf(
-            wfMessage( 'discordnotifications-article-saved' )->text(),
+            self::getMessage('discordnotifications-article-saved'),
 			self::getDiscordUserText($user),
-			$isMinor == true ? wfMessage( 'discordnotifications-article-saved-minor-edits' )->text() : wfMessage( 'discordnotifications-article-saved-edit' )->text(),
+			$isMinor == true ? self::getMessage('discordnotifications-article-saved-minor-edits') : self::getMessage('discordnotifications-article-saved-edit'),
 			self::getDiscordArticleText($article, true),
-			$summary == "" ? "" : wfMessage( 'discordnotifications-summary' )->text() . $summary);
+			$summary == "" ? "" : self::getMessage('discordnotifications-summary') . $summary);
 		if ($wgDiscordIncludeDiffSize)
 		{		
 			$message .= sprintf(
-				" (%+d " . wfMessage( 'discordnotifications-bytes' )->text() . ")",
+				" (%+d " . self::getMessage('discordnotifications-bytes') . ")",
 				$article->getRevision()->getSize() - $article->getRevision()->getPrevious()->getSize());
 		}
 		self::push_discord_notify($message, $user, 'article_saved');
@@ -172,17 +172,17 @@ class DiscordNotifications
 		}
 
 		// Do not announce newly added file uploads as articles...
-		if ($article->getTitle()->getNsText() == wfMessage( 'discordnotifications-file-namespace' )) return true;
+		if ($article->getTitle()->getNsText() == self::getMessage('discordnotifications-file-namespace')) return true;
 		
 		$message = sprintf(
-            wfMessage( 'discordnotifications-article-created' ),
+            self::getMessage('discordnotifications-article-created'),
 			self::getDiscordUserText($user),
 			self::getDiscordArticleText($article),
-			$summary == "" ? "" : wfMessage( 'discordnotifications-summary' ) . $summary);
+			$summary == "" ? "" : self::getMessage('discordnotifications-summary') . $summary);
 		if ($wgDiscordIncludeDiffSize)
 		{		
 			$message .= sprintf(
-				" (%d " . wfMessage( 'discordnotifications-bytes' ) . ")",
+				" (%d " . self::getMessage('discordnotifications-bytes') . ")",
 				$article->getRevision()->getSize());
 		}
 		self::push_discord_notify($message, $user, 'article_inserted');
@@ -207,7 +207,7 @@ class DiscordNotifications
 		}
 
 		$message = sprintf(
-            wfMessage( 'discordnotifications-article-deleted' ),
+            self::getMessage('discordnotifications-article-deleted'),
 			self::getDiscordUserText($user),
 			self::getDiscordArticleText($article),
 			$reason);
@@ -225,7 +225,7 @@ class DiscordNotifications
 		if (!$wgDiscordNotificationMovedArticle) return;
 
 		$message = sprintf(
-            wfMessage( 'discordnotifications-article-moved' ),
+            self::getMessage('discordnotifications-article-moved'),
 			self::getDiscordUserText($user),
 			self::getDiscordTitleText($title),
 			self::getDiscordTitleText($newtitle),
@@ -244,9 +244,9 @@ class DiscordNotifications
 		if (!$wgDiscordNotificationProtectedArticle) return;
 
 		$message = sprintf(
-            wfMessage( 'discordnotifications-article-protected' ),
+            self::getMessage('discordnotifications-article-protected'),
 			self::getDiscordUserText($user),
-			$protect ? wfMessage( 'discordnotifications-article-protected-change' ) : wfMessage( 'discordnotifications-article-protected-remove' ),
+			$protect ? self::getMessage('discordnotifications-article-protected-change') : self::getMessage('discordnotifications-article-protected-remove'),
 			self::getDiscordArticleText($article),
 			$reason);
 		self::push_discord_notify($message, $user, 'article_protected');
@@ -280,7 +280,7 @@ class DiscordNotifications
 		}
 
 		$message = sprintf(
-            wfMessage( 'discordnotifications-new-user' ),
+            self::getMessage('discordnotifications-new-user'),
 			self::getDiscordUserText($user),
 			$messageExtra);
 		self::push_discord_notify($message, $user, 'new_user_account');
@@ -298,7 +298,7 @@ class DiscordNotifications
 
 		global $wgWikiUrl, $wgWikiUrlEnding, $wgUser;
 		$message = sprintf(
-            wfMessage( 'discordnotifications-file-uploaded' ),
+            self::getMessage('discordnotifications-file-uploaded'),
 			self::getDiscordUserText($wgUser->mName),
 			self::parseurl($wgWikiUrl . $wgWikiUrlEnding . $image->getLocalFile()->getTitle()),
 			$image->getLocalFile()->getTitle(),
@@ -321,12 +321,12 @@ class DiscordNotifications
 
 		global $wgWikiUrl, $wgWikiUrlEnding, $wgWikiUrlEndingBlockList;
 		$message = sprintf(
-            wfMessage( 'discordnotifications-block-user' ),
+            self::getMessage('discordnotifications-block-user'),
 			self::getDiscordUserText($user),
 			self::getDiscordUserText($block->getTarget()),
-			$block->mReason == "" ? "" : wfMessage( 'discordnotifications-block-user-reason' ) . " '".$block->mReason."'.",
+			$block->mReason == "" ? "" : self::getMessage('discordnotifications-block-user-reason') . " '".$block->mReason."'.",
 			$block->mExpiry,
-			"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingBlockList)."|" . wfMessage( 'discordnotifications-block-user-list' ) . ">.");
+			"<".self::parseurl($wgWikiUrl.$wgWikiUrlEnding.$wgWikiUrlEndingBlockList)."|" . self::getMessage('discordnotifications-block-user-list') . ">.");
 		self::push_discord_notify($message, $user, 'user_blocked');
 		return true;
 	}
@@ -421,6 +421,8 @@ class DiscordNotifications
 			curl_close($h);
 		}
 	}
+    private function getMessage($key) {
+		return wfMessage( $key)->text();
+    }
 }
-
 ?>

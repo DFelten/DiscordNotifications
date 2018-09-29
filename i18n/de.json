@@ -16,7 +16,7 @@
 	"discordnotifications-article-saved": "📝 %1$s hat den Artikel %3$s %2$s %4$s",
 	"discordnotifications-article-saved-minor-edits": "ein wenig bearbeitet.",
 	"discordnotifications-article-saved-edit": "bearbeitet.",
-	"discordnotifications-article-created": "📄 %s hat den Artikel %s erstellt %s",
+	"discordnotifications-article-created": "📄 %s hat den Artikel %s erstellt. %s",
 	"discordnotifications-file-namespace": "Datei",
 	"discordnotifications-article-deleted": "❌ %s hat den Artikel %s gelöscht. Begründung: %s",
 	"discordnotifications-article-moved": "➡ %s hat den Artikel %s nach %s verschoben. Begründung: %s",
